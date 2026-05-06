@@ -1,0 +1,54 @@
+<Page x:Class="WpfApp1.Pages.ChartsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Графики и Статистика" Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15" Margin="0,0,0,15">
+            <TextBlock Text="Графики и статистика" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0,0,10,0" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Background="#F8F9FA">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Объем продаж по продуктам (тонны)" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,15" HorizontalAlignment="Center"/>
+                    <lvc:CartesianChart x:Name="SalesVolumeChart" Grid.Row="1">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Продукт" Labels="{Binding ProductLabels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Тонны"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Margin="10,0,0,0" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Background="#F8F9FA">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Выручка по продуктам (руб)" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,15" HorizontalAlignment="Center"/>
+                    <lvc:PieChart x:Name="RevenuePieChart" Grid.Row="1" LegendLocation="Bottom" Hoverable="True">
+                    </lvc:PieChart>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

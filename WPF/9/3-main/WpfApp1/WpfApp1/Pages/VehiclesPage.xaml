@@ -1,0 +1,68 @@
+﻿<Page x:Class="WpfApp1.Pages.VehiclesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="База автомобилей" Background="White">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="Данные автомобиля" Margin="0,0,0,15" Padding="10">
+            <StackPanel>
+                <UniformGrid Columns="3" Margin="0,0,0,10">
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Гос. номер (A123AA77):"/>
+                        <TextBox x:Name="TxtLicensePlate" Padding="3" CharacterCasing="Upper"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Марка и Модель:"/>
+                        <TextBox x:Name="TxtBrandModel" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Год выпуска:"/>
+                        <TextBox x:Name="TxtYear" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,10,5,0">
+                        <TextBlock Text="Текущий пробег (км):"/>
+                        <TextBox x:Name="TxtMileage" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,10,5,0">
+                        <TextBlock Text="Статус:"/>
+                        <ComboBox x:Name="CmbStatus" Padding="3"/>
+                    </StackPanel>
+                </UniformGrid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="Сохранить" Click="SaveBtn_Click" Width="100" Margin="5" Background="#28A745" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Content="Новый" Click="ClearBtn_Click" Width="100" Margin="5" Background="#6C757D" Foreground="White" Cursor="Hand"/>
+                    <Button Content="Удалить" Click="DeleteBtn_Click" Width="100" Margin="5" Background="#DC3545" Foreground="White" Cursor="Hand"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Поиск (Номер/Марка):" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="SearchTextBox" Width="250" Padding="3" TextChanged="SearchTextBox_TextChanged" Margin="0,0,20,0"/>
+
+            <TextBlock Text="Фильтр по статусу:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+            <ComboBox x:Name="FilterStatusCombo" Width="150" Padding="3" SelectionChanged="FilterStatusCombo_SelectionChanged"/>
+        </StackPanel>
+
+        <DataGrid x:Name="VehiclesGrid" Grid.Row="2" AutoGenerateColumns="False" 
+                  IsReadOnly="True" SelectionMode="Single" 
+                  SelectionChanged="VehiclesGrid_SelectionChanged" RowHeight="30"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding IdАвто}" Width="50"/>
+                <DataGridTextColumn Header="Гос. Номер" Binding="{Binding ГосНомер}" Width="120" FontWeight="Bold"/>
+                <DataGridTextColumn Header="Марка / Модель" Binding="{Binding МаркаМодель}" Width="*"/>
+                <DataGridTextColumn Header="Год" Binding="{Binding ГодВыпуска}" Width="80"/>
+                <DataGridTextColumn Header="Пробег (км)" Binding="{Binding ТекущийПробег}" Width="100"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Статус}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

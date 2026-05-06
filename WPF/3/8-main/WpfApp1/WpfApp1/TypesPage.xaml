@@ -1,0 +1,48 @@
+﻿<Page x:Class="WpfApp1.TypesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Типы СВТ" Background="White">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15" Margin="0,0,0,15">
+            <TextBlock Text="Типы оборудования" FontSize="24" FontWeight="Bold"/>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0,0,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                    <TextBox x:Name="SearchTextBox" Width="300" TextChanged="SearchTextBox_TextChanged"/>
+                </StackPanel>
+                <DataGrid x:Name="TypesGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionChanged="TypesGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IDТипа}" Width="50"/>
+                        <DataGridTextColumn Header="Наименование типа" Binding="{Binding Название}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Border Grid.Column="1" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Редактор типов" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock Text="Название:"/>
+                    <TextBox x:Name="TxtName" Margin="0,5,0,25"/>
+                    <Button Content="Сохранить" Click="SaveBtn_Click" Background="#28A745" Foreground="White" Margin="0,0,0,10"/>
+                    <Button Content="Очистить" Click="ClearBtn_Click" Background="#6C757D" Foreground="White" Margin="0,0,0,10"/>
+                    <Button Content="Удалить" Click="DeleteBtn_Click" Background="#DC3545" Foreground="White"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

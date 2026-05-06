@@ -1,0 +1,39 @@
+﻿<Page x:Class="WpfApp1.Pages.AnalyticsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+      Title="Аналитика">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель: Быстрые показатели -->
+        <Border Grid.Row="0" Background="#EAEAEA" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="TxtTotalSales" FontSize="18" FontWeight="Bold" Foreground="#4CAF50" Margin="0,0,30,0"/>
+                <TextBlock x:Name="TxtTotalOrders" FontSize="16" Margin="0,0,30,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TxtTotalProducts" FontSize="16" Margin="0,0,30,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TxtTotalCustomers" FontSize="16" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Нижняя панель: График -->
+        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Распределение ассортимента по категориям (кол-во товаров)" 
+                           FontSize="18" FontWeight="Bold" Margin="0,0,0,15" HorizontalAlignment="Center"/>
+
+                <!-- Сам компонент графика. Данные биндятся из Code-Behind -->
+                <lvc:CartesianChart Grid.Row="1" Series="{Binding ChartSeries}" XAxes="{Binding ChartXAxes}" />
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

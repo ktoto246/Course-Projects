@@ -1,0 +1,84 @@
+﻿<Page x:Class="WpfApp1.Pages.DamagesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Журнал поломок">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Учет поломок и штрафов" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <Border Grid.Row="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Регистрация новой поломки" FontWeight="SemiBold" FontSize="16" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                <WrapPanel Margin="0,0,0,15" VerticalAlignment="Bottom">
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Заказ аренды" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <ComboBox x:Name="cmbRental" Width="250" SelectedValuePath="IdАренды">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="Заказ №"/>
+                                        <Run Text="{Binding IdАренды}"/>
+                                        <Run Text=" — "/>
+                                        <Run Text="{Binding IdКлиентаNavigation.Фио}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Описание повреждений" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <TextBox x:Name="txtDescription" Width="250"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Сумма штрафа (руб.)" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <TextBox x:Name="txtFine" Width="120"/>
+                    </StackPanel>
+
+                    <CheckBox x:Name="chkIsPaid" Content="Оплачено" VerticalAlignment="Bottom" Margin="0,0,15,18"/>
+
+                    <Button Content="Добавить" Style="{StaticResource PrimaryButton}" Margin="0,0,0,10" VerticalAlignment="Bottom" Height="34" Click="BtnAdd_Click"/>
+                </WrapPanel>
+
+                <Separator Margin="0,10,0,15" Background="{StaticResource BorderLight}"/>
+
+                <Grid>
+                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Поиск (по описанию)" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBox x:Name="txtSearch" Width="250" TextChanged="Filter_Changed"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Button Content="Удалить" Style="{StaticResource DangerButton}" Margin="0,0,10,0" Click="BtnDelete_Click"/>
+                        <Button Content="Сохранить изменения" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" Click="BtnSave_Click"/>
+                        <Button Content="Экспорт в Excel" Style="{StaticResource SuccessButton}" Click="BtnExportExcel_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="1">
+            <DataGrid x:Name="DamagesGrid" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding IdПоломки}" IsReadOnly="True" Width="50"/>
+                    <DataGridTextColumn Header="Заказ №" Binding="{Binding IdАренды}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding IdАрендыNavigation.IdКлиентаNavigation.Фио}" IsReadOnly="True" Width="180"/>
+                    <DataGridTextColumn Header="Плавсредство" Binding="{Binding IdАрендыNavigation.IdПлавсредстваNavigation.Модель}" IsReadOnly="True" Width="150"/>
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Описание}" Width="*"/>
+                    <DataGridTextColumn Header="Штраф" Binding="{Binding СуммаШтрафа}" Width="100"/>
+                    <DataGridCheckBoxColumn Header="Оплачено" Binding="{Binding Оплачено}" IsReadOnly="True" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>

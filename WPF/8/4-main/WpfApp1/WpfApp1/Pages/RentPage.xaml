@@ -1,0 +1,70 @@
+﻿<Page x:Class="WpfApp1.RentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Аренда" Background="White">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="Договор аренды" Margin="0,0,0,15" Padding="10">
+            <StackPanel>
+                <UniformGrid Columns="4" Margin="0,0,0,10">
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Автомобиль:"/>
+                        <ComboBox x:Name="CmbCar" DisplayMemberPath="Марка_Модель" SelectedValuePath="ID_Авто"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Клиент:"/>
+                        <ComboBox x:Name="CmbClient" DisplayMemberPath="ФИО" SelectedValuePath="ID_Клиента"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Выдача:"/>
+                        <DatePicker x:Name="DpStart"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="План возврата:"/>
+                        <DatePicker x:Name="DpEndPlan"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Сумма (₽):"/>
+                        <TextBox x:Name="TxtSum" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Залог (₽):"/>
+                        <TextBox x:Name="TxtDeposit" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Статус:"/>
+                        <ComboBox x:Name="CmbStatus"/>
+                    </StackPanel>
+                </UniformGrid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Сохранить" Click="SaveBtn_Click" Width="100" Margin="5" Background="#28A745" Foreground="White" FontWeight="Bold"/>
+                    <Button Content="Очистить" Click="ClearBtn_Click" Width="100" Margin="5" Background="#6C757D" Foreground="White"/>
+                    <Button Content="Удалить" Click="DeleteBtn_Click" Width="100" Margin="5" Background="#DC3545" Foreground="White"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Поиск (Авто, Клиент):" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="SearchTextBox" Width="250" Padding="3" TextChanged="SearchTextBox_TextChanged" Margin="0,0,20,0"/>
+            <TextBlock Text="Статус:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+            <ComboBox x:Name="FilterStatusCombo" Width="150" Padding="3" SelectionChanged="FilterStatusCombo_SelectionChanged"/>
+        </StackPanel>
+
+        <DataGrid x:Name="RentGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" SelectionChanged="RentGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID_Аренды}" Width="40"/>
+                <DataGridTextColumn Header="Авто" Binding="{Binding Автомобиль.Марка_Модель}" Width="*"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Клиент.ФИО}" Width="*"/>
+                <DataGridTextColumn Header="Выдача" Binding="{Binding Дата_Выдачи, StringFormat=dd.MM.yyyy}" Width="100"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding Сумма_Итого}" Width="80"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Статус}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

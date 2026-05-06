@@ -1,0 +1,92 @@
+<Page x:Class="WpfApp1.Pages.SalesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Реализация" Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15" Margin="0,0,0,15">
+            <TextBlock Text="Журнал реализации нефтепродуктов" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Нефтепродукт:" VerticalAlignment="Center" Margin="0,0,6,0" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="ProductFilterComboBox" Width="200" SelectionChanged="FilterComboBox_SelectionChanged" DisplayMemberPath="Название" SelectedValuePath="ID_Продукта"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock Text="Клиент:" VerticalAlignment="Center" Margin="0,0,6,0" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="ClientFilterComboBox" Width="200" SelectionChanged="FilterComboBox_SelectionChanged" DisplayMemberPath="Название_Компании" SelectedValuePath="ID_Клиента"/>
+                </StackPanel>
+            </Grid>
+
+            <DataGrid x:Name="SalesGrid" Grid.Row="1" Grid.Column="0" AutoGenerateColumns="False" 
+                      IsReadOnly="True" SelectionMode="Single" SelectionChanged="SalesGrid_SelectionChanged"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E0E0E0"
+                      BorderThickness="1" BorderBrush="#D1D1D1" RowHeight="35" Margin="0,0,20,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID_Реализации}" Width="50"/>
+                    <DataGridTextColumn Header="Нефтепродукт" Binding="{Binding Нефтепродукт.Название}" Width="150"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding Клиент.Название_Компании}" Width="150"/>
+                    <DataGridTextColumn Header="Количество (т)" Binding="{Binding Количество_Тонн, StringFormat={}{0:N2}}" Width="120"/>
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding Общая_Стоимость, StringFormat={}{0:N2}}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Дата отгрузки" Binding="{Binding Дата_Отгрузки, StringFormat=dd.MM.yyyy}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="1" Grid.Column="1" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Запись реализации" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Нефтепродукт:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="CmbProduct" Padding="5" Margin="0,0,0,15" FontSize="14" DisplayMemberPath="Название" SelectedValuePath="ID_Продукта" SelectionChanged="CmbProduct_SelectionChanged"/>
+
+                        <TextBlock Text="Клиент:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="CmbClient" Padding="5" Margin="0,0,0,15" FontSize="14" DisplayMemberPath="Название_Компании" SelectedValuePath="ID_Клиента"/>
+
+                        <TextBlock Text="Количество тонн:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtQuantity" Padding="5" Margin="0,0,0,15" FontSize="14" TextChanged="TxtQuantity_TextChanged"/>
+
+                        <TextBlock Text="Общая стоимость:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtTotalCost" Padding="5" Margin="0,0,0,15" FontSize="14"/>
+
+                        <TextBlock Text="Дата отгрузки:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <DatePicker x:Name="DpDate" Padding="5" Margin="0,0,0,25" FontSize="14"/>
+
+                        <Button Content="Сохранить" Click="SaveBtn_Click" Background="#28A745" Foreground="White" BorderThickness="0" Padding="10" Margin="0,0,0,10" Cursor="Hand" FontWeight="Bold"/>
+                        <Button Content="Очистить (Новый)" Click="ClearBtn_Click" Background="#6C757D" Foreground="White" BorderThickness="0" Padding="10" Margin="0,0,0,10" Cursor="Hand"/>
+                        <Button Content="Удалить" Click="DeleteBtn_Click" Background="#DC3545" Foreground="White" BorderThickness="0" Padding="10" Cursor="Hand"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,92 @@
+﻿<Page x:Class="WpfApp1.Pages.RentalsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Журнал проката">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Управление прокатом" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <Border Grid.Row="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Оформление новой выдачи" FontWeight="SemiBold" FontSize="16" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,10"/>
+
+                <WrapPanel Margin="0,0,0,15" VerticalAlignment="Bottom">
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Клиент" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <ComboBox x:Name="cmbClient" Width="200" DisplayMemberPath="Фио" SelectedValuePath="IdКлиента"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Плавсредство" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <ComboBox x:Name="cmbWatercraft" Width="250" SelectedValuePath="IdПлавсредства">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                <Run Text="{Binding Модель}"/>
+                <Run Text=" — ("/>
+                <Run Text="{Binding IdКатегорииNavigation.Название}"/>
+                <Run Text=")"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Оформил сотрудник" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <ComboBox x:Name="cmbEmployee" Width="180" DisplayMemberPath="Фио" SelectedValuePath="IdСотрудника"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,10">
+                        <TextBlock Text="Залог (руб.)" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                        <TextBox x:Name="txtDeposit" Width="100" Text="0"/>
+                    </StackPanel>
+
+                    <Button Content="Оформить" Style="{StaticResource PrimaryButton}" Margin="0,0,0,10" VerticalAlignment="Bottom" Height="34" Click="BtnStartRent_Click"/>
+                </WrapPanel>
+
+                <Separator Margin="0,10,0,15" Background="{StaticResource BorderLight}"/>
+
+                <Grid>
+                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Поиск (по клиенту или лодке)" Margin="0,0,0,5" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBox x:Name="txtSearch" Width="220" TextChanged="Filter_Changed"/>
+                        </StackPanel>
+
+                        <CheckBox x:Name="chkActiveOnly" Content="Только на воде (не завершены)" VerticalAlignment="Bottom" Margin="0,0,0,8" Click="Filter_Changed"/>
+                    </WrapPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Button Content="Завершить аренду" Style="{StaticResource SuccessButton}" Margin="0,0,10,0" Click="BtnCompleteRent_Click"/>
+                        <Button Content="Удалить" Style="{StaticResource DangerButton}" Margin="0,0,10,0" Click="BtnDelete_Click"/>
+                        <Button Content="Экспорт" Style="{StaticResource PrimaryButton}" Click="BtnExportExcel_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="1">
+            <DataGrid x:Name="RentalsGrid" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" BorderThickness="0" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="№" Binding="{Binding IdАренды}" Width="50"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding IdКлиентаNavigation.Фио}" Width="150"/>
+                    <DataGridTextColumn Header="Лодка/Сап" Binding="{Binding IdПлавсредстваNavigation.Модель}" Width="150"/>
+                    <DataGridTextColumn Header="Выдал(а)" Binding="{Binding IdСотрудникаNavigation.Фио}" Width="120"/>
+
+                    <DataGridTextColumn Header="Взяли" Binding="{Binding ВремяНачала, StringFormat=\{0:dd.MM.yy HH:mm\}}" Width="110"/>
+                    <DataGridTextColumn Header="Вернули" Binding="{Binding ВремяКонца, StringFormat=\{0:dd.MM.yy HH:mm\}}" Width="110"/>
+
+                    <DataGridTextColumn Header="Залог" Binding="{Binding СуммаЗалога}" Width="80"/>
+                    <DataGridTextColumn Header="К оплате" Binding="{Binding ИтогоКОплате}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>

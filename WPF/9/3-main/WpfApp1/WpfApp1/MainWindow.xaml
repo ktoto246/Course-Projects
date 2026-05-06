@@ -1,0 +1,32 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Учет Автотранспорта" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#2D2D30">
+            <StackPanel Margin="10, 20, 10, 10">
+                <TextBlock Text="НАВИГАЦИЯ" Foreground="#888888" FontSize="14" FontWeight="Bold" Margin="10,0,0,20"/>
+
+                <Button Name="BtnVehicles" Content="База автомобилей" Height="40" Margin="0,5" Click="BtnVehicles_Click" 
+                        Background="#3E3E42" Foreground="White" BorderThickness="0" FontSize="14" Cursor="Hand"/>
+
+                <Button Name="BtnTrips" Content="Журнал пробега" Height="40" Margin="0,5" Click="BtnTrips_Click" 
+                        Background="#3E3E42" Foreground="White" BorderThickness="0" FontSize="14" Cursor="Hand"/>
+
+                <Button Name="BtnRepairs" Content="Учет ремонтов" Height="40" Margin="0,5" Click="BtnRepairs_Click" 
+                        Background="#3E3E42" Foreground="White" BorderThickness="0" FontSize="14" Cursor="Hand"/>
+                <Button Name="BtnStats" Content="Статистика" Height="40" Margin="0,5" Click="BtnStats_Click" Background="#3E3E42" Foreground="White" BorderThickness="0" FontSize="14" Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+
+        <Frame x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" Background="#F5F5F5"/>
+
+    </Grid>
+</Window>

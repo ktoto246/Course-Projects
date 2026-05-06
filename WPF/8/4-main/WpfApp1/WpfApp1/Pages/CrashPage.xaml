@@ -1,0 +1,55 @@
+﻿<Page x:Class="WpfApp1.CrashPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="ДТП" Background="White">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="Регистрация происшествия" Margin="0,0,0,15" Padding="10">
+            <StackPanel>
+                <UniformGrid Columns="3" Margin="0,0,0,10">
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="ID Аренды:"/>
+                        <ComboBox x:Name="CmbRent" DisplayMemberPath="ID_Аренды" SelectedValuePath="ID_Аренды"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Дата ДТП:"/>
+                        <DatePicker x:Name="DpCrashDate"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Сумма ущерба:"/>
+                        <TextBox x:Name="TxtDamage" Padding="3"/>
+                    </StackPanel>
+                </UniformGrid>
+                <TextBlock Text="Описание:"/>
+                <TextBox x:Name="TxtDesc" Height="50" Margin="5" TextWrapping="Wrap"/>
+                <CheckBox x:Name="CbFault" Content="Вина клиента" Margin="5"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Сохранить" Click="SaveBtn_Click" Width="100" Margin="5" Background="#28A745" Foreground="White" FontWeight="Bold"/>
+                    <Button Content="Новый" Click="ClearBtn_Click" Width="100" Margin="5" Background="#6C757D" Foreground="White"/>
+                    <Button Content="Удалить" Click="DeleteBtn_Click" Width="100" Margin="5" Background="#DC3545" Foreground="White"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="SearchTextBox" Width="300" Padding="3" TextChanged="SearchTextBox_TextChanged"/>
+        </StackPanel>
+
+        <DataGrid x:Name="CrashGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" SelectionChanged="CrashGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Дата_ДТП, StringFormat=dd.MM.yyyy}" Width="100"/>
+                <DataGridTextColumn Header="Аренда #" Binding="{Binding ID_Аренды}" Width="80"/>
+                <DataGridTextColumn Header="Авто" Binding="{Binding Аренда.Автомобиль.Марка_Модель}" Width="*"/>
+                <DataGridTextColumn Header="Ущерб" Binding="{Binding Сумма_Ущерба}" Width="100"/>
+                <DataGridCheckBoxColumn Header="Вина клиента" Binding="{Binding Вина_Клиента}" Width="100"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Описание}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

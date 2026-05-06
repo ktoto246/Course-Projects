@@ -1,0 +1,150 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+       Title="Донор 21 - Центр заготовки крови" 
+        Height="700" Width="1200"
+        Icon="/Resources/Icon.ico"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#8A4442"/>
+            <Setter Property="Foreground" Value="#D9D9D9"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#E2D9D9">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="199*"/>
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#8A4442" Padding="15" Grid.ColumnSpan="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Grid Width="50" Height="50" Margin="0,0,15,0">
+                        <Image Source="/Logo.png"
+                               Width="50" 
+                               Height="50"
+                               Stretch="Uniform"/>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="ДОНОР 21" 
+                                   Foreground="#D9D9D9" 
+                                   FontSize="28" 
+                                   FontWeight="Bold"/>
+                        <TextBlock Text="Центр заготовки крови и компонентов" 
+                                   Foreground="#D9D9D9" 
+                                   FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal"/>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1" Margin="10,10,10,10" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="White" CornerRadius="5" 
+                    Padding="15" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Управление компонентами крови" 
+                               FontSize="16" FontWeight="Bold" 
+                               Foreground="#8A4442" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <TextBlock Text="Компонент:" VerticalAlignment="Center" Margin="5"/>
+                            <ComboBox x:Name="cbFilterComponent" Width="120">
+                                <ComboBoxItem Content="Все" IsSelected="True"/>
+                                <ComboBoxItem Content="Эритроциты"/>
+                                <ComboBoxItem Content="Плазма"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Обновить" 
+                                Click="BtnRefresh_Click" Margin="5"/>
+                        <Button Grid.Column="2" Content="Добавить донацию"
+                                Click="BtnAddDonation_Click" Margin="5"/>
+                        <Button Grid.Column="3" Content="Поиск по совместимости"
+                                Click="BtnSearchCompatibility_Click" Margin="5"/>
+                        <Button Grid.Column="4" Content="Обновить статусы" 
+                                Click="BtnUpdateStatuses_Click" Margin="5"/>
+                        <Button Grid.Column="5" Content="Экспорт" 
+                                Click="BtnExport_Click" Margin="5"/>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Height="42">
+                        <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="txtSearch" Width="200" 
+                                 TextChanged="TxtSearch_TextChanged"
+                                 Margin="5">
+                            <TextBox.ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold" Text="Подсказка:" />
+                                    <TextBlock Text="Введите ID донора" />
+                                </StackPanel>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                               
+                        <Button x:Name="btnClearSearch" Content="Очистить" 
+                                Click="BtnClearSearch_Click" 
+                                Margin="5" Width="80"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1" Background="White" CornerRadius="5" Padding="10">
+                <DataGrid x:Name="dgUnits" 
+                          LoadingRow="DgUnits_LoadingRow"
+                          MouseDoubleClick="DgUnits_MouseDoubleClick"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          RowHeight="35">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID донора" Binding="{Binding DonorID}" Width="100"/>
+                        <DataGridTextColumn Header="Компонент" Binding="{Binding Component}" Width="100"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="180"/>
+                        <DataGridTextColumn Header="Дата сбора" Binding="{Binding Date_Sbora, StringFormat=dd.MM.yyyy}" Width="110"/>
+                        <DataGridTextColumn Header="Группа крови" Binding="{Binding BloodGroup}" Width="120"/>
+                        <DataGridTextColumn Header="Резус-фактор" Binding="{Binding RhString}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+        <StatusBar Grid.Row="1" Background="#8A4442" Grid.ColumnSpan="3" Margin="0,579,0,0">
+            <StatusBarItem>
+                <TextBlock x:Name="tbStatus" Foreground="#D9D9D9" 
+                           Text="Готово" Margin="10,0"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="tbRecordsCount" Foreground="#D9D9D9" 
+                           Text="Записей: 0" Margin="10,0"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

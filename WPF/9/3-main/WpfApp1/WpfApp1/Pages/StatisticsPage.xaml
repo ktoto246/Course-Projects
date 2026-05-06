@@ -1,0 +1,33 @@
+﻿<Page x:Class="WpfApp1.Pages.StatisticsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Статистика" Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Аналитика автопарка" FontSize="26" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <UniformGrid Grid.Row="1" Columns="2">
+            <GroupBox Header="Текущее состояние парка" Margin="10" Padding="10">
+                <lvc:PieChart x:Name="ChartStatuses" LegendLocation="Bottom" Hoverable="True">
+                </lvc:PieChart>
+            </GroupBox>
+
+            <GroupBox Header="Пробег автомобилей (км)" Margin="10" Padding="10">
+                <lvc:CartesianChart x:Name="ChartMileage">
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Пробег (км)" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Гос. номера" Labels="{Binding VehicleLabels}"></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
+            </GroupBox>
+        </UniformGrid>
+    </Grid>
+</Page>

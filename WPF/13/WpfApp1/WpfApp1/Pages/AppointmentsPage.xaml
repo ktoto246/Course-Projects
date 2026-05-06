@@ -1,0 +1,61 @@
+﻿<Page x:Class="WpfApp1.Pages.AppointmentsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Приемы" Background="White">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="Детали записи" Margin="0,0,0,15" Padding="10">
+            <StackPanel>
+                <UniformGrid Columns="3" Margin="0,0,0,10">
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Пациент:"/>
+                        <ComboBox x:Name="CmbPatient" DisplayMemberPath="FullName" SelectedValuePath="Id" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Врач:"/>
+                        <ComboBox x:Name="CmbDoctor" DisplayMemberPath="FullName" SelectedValuePath="Id" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Text="Дата и время:"/>
+                        <DatePicker x:Name="DpDate" Padding="3"/>
+                    </StackPanel>
+                    <StackPanel Margin="5,10,5,0">
+                        <TextBlock Text="Статус:"/>
+                        <ComboBox x:Name="CmbStatus" Padding="3"/>
+                    </StackPanel>
+                </UniformGrid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="Сохранить" Click="SaveBtn_Click" Width="100" Margin="5" Background="#28A745" Foreground="White" FontWeight="Bold"/>
+                    <Button Content="Новый" Click="ClearBtn_Click" Width="100" Margin="5" Background="#6C757D" Foreground="White"/>
+                    <Button Content="Удалить" Click="DeleteBtn_Click" Width="100" Margin="5" Background="#DC3545" Foreground="White"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Поиск (Пациент):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox x:Name="SearchTextBox" Width="250" Padding="3" TextChanged="SearchTextBox_TextChanged" Margin="0,0,20,0"/>
+
+            <TextBlock Text="Статус:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="FilterStatusCombo" Width="150" Padding="3" SelectionChanged="FilterStatusCombo_SelectionChanged"/>
+        </StackPanel>
+
+        <DataGrid x:Name="AppointmentsGrid" Grid.Row="2" AutoGenerateColumns="False" 
+                  IsReadOnly="True" SelectionMode="Single" 
+                  SelectionChanged="AppointmentsGrid_SelectionChanged" RowHeight="30">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding AppointmentDate, StringFormat=\{0:dd.MM.yyyy HH:mm\}}" Width="140"/>
+                <DataGridTextColumn Header="Пациент" Binding="{Binding Patient.FullName}" Width="*"/>
+                <DataGridTextColumn Header="Врач" Binding="{Binding Doctor.FullName}" Width="*"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

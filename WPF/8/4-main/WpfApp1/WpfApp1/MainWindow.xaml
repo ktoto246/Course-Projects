@@ -1,0 +1,55 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Учет Проката Авто" Height="700" Width="1100" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="StandardSidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="#374151"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4B5563"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="#EFF6FF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#2563EB">
+            <TextBlock Text="Rental Dashboard Pro" Foreground="White" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Frame x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" Margin="20"/>
+
+            <Border Grid.Column="0" Background="#1F2937" Padding="15,20,15,15">
+                <StackPanel>
+                    <TextBlock Text="НАВИГАЦИЯ" Foreground="#6B7280" FontSize="14" FontWeight="Bold" Margin="5,0,0,20"/>
+
+                    <Button x:Name="BtnCars" Content="Автопарк" Style="{StaticResource StandardSidebarButton}" Click="BtnCars_Click"/>
+                    <Button x:Name="BtnClients" Content="Клиенты" Style="{StaticResource StandardSidebarButton}" Click="BtnClients_Click"/>
+                    <Button x:Name="BtnRent" Content="Аренда" Style="{StaticResource StandardSidebarButton}" Click="BtnRent_Click"/>
+                    <Button x:Name="BtnCrash" Content="Учет ДТП" Style="{StaticResource StandardSidebarButton}" Click="BtnCrash_Click"/>
+                    <Button x:Name="BtnStatistics" Content="Статистика" Style="{StaticResource StandardSidebarButton}" Click="BtnStatistics_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Регистратура" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="25,0,0,0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#34495E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Background="#2C3E50">
+            <TextBlock Text="МЕД-РЕГИСТР" Foreground="White" FontSize="20" FontWeight="Bold" Margin="20,30,20,40" HorizontalAlignment="Center"/>
+            <Button Content="Приемы" Style="{StaticResource NavButtonStyle}" Click="NavAppointments_Click"/>
+            <Button Content="Врачи" Style="{StaticResource NavButtonStyle}" Click="NavDoctors_Click"/>
+            <Button Content="Пациенты" Style="{StaticResource NavButtonStyle}" Click="NavPatients_Click"/>
+            <Button Content="Специальности" Style="{StaticResource NavButtonStyle}" Click="NavSpecialties_Click"/>
+            <Button Content="Статистика" Style="{StaticResource NavButtonStyle}" Click="NavStatistics_Click"/>
+        </StackPanel>
+
+        <Frame Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" Margin="10"/>
+    </Grid>
+</Window>
