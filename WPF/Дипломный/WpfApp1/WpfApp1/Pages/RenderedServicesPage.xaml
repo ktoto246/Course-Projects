@@ -1,0 +1,55 @@
+<Page x:Class="WpfApp1.Pages.RenderedServicesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Оказанные услуги" Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <StackPanel Margin="0,0,20,0">
+                <TextBlock Text="Поиск (по номеру авто)" FontSize="11" Foreground="#94A3B8" Margin="0,0,0,5"/>
+                <TextBox x:Name="txtSearch" Width="250" Height="35" VerticalContentAlignment="Center" Padding="10,0" TextChanged="txtSearch_TextChanged"/>
+            </StackPanel>
+            <Button Content="Экспорт в Excel" Width="130" Height="35" Background="#107C41" Foreground="White" FontWeight="Bold" Margin="0,15,10,0" Click="btnExportToExcel_Click"/>
+            <Button x:Name="btnSaveChanges" Content="Сохранить изменения" Width="160" Height="35" Background="#3498DB" Foreground="White" FontWeight="Bold" Margin="0,15,10,0" Click="btnSaveChanges_Click"/>
+            <Button x:Name="btnDeleteService" Content="Удалить" Width="100" Height="35" Background="#EF4444" Foreground="White" FontWeight="Bold" Margin="0,15,0,0" Click="btnDeleteService_Click"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Партия" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="cmbBatch" Width="160" Height="35" VerticalContentAlignment="Center" DisplayMemberPath="DisplayText"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Услуга" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="cmbService" Width="180" Height="35" VerticalContentAlignment="Center" DisplayMemberPath="Name" SelectionChanged="cmbService_SelectionChanged"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Количество" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtQuantity" Width="100" Height="35" VerticalContentAlignment="Center" Padding="5,0" TextChanged="txtQuantity_TextChanged"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Итого (руб)" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtTotalPrice" Width="120" Height="35" VerticalContentAlignment="Center" Padding="5,0" IsReadOnly="True" Background="#F1F5F9"/>
+                </StackPanel>
+                <Button x:Name="btnAddService" Content="Добавить" Width="100" Height="35" Background="#E67E22" Foreground="White" FontWeight="Bold" Margin="0,15,0,0" Click="btnAddService_Click"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" x:Name="dgRenderedServices" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Авто" Binding="{Binding Batch.CarNumber}" Width="120" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Услуга" Binding="{Binding Service.Name}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>
+                <DataGridTextColumn Header="Итого" Binding="{Binding TotalPrice}" Width="120" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

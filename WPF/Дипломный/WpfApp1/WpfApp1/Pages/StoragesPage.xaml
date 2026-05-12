@@ -1,0 +1,46 @@
+<Page x:Class="WpfApp1.Pages.StoragesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Склады" Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <StackPanel Margin="0,0,20,0">
+                <TextBlock Text="Поиск (по названию)" FontSize="11" Foreground="#94A3B8" Margin="0,0,0,5"/>
+                <TextBox x:Name="txtSearch" Width="250" Height="35" VerticalContentAlignment="Center" Padding="10,0" TextChanged="txtSearch_TextChanged"/>
+            </StackPanel>
+            <Button x:Name="btnExport" Content="Экспорт в Excel" Width="130" Height="35" Background="#107C41" Foreground="White" FontWeight="Bold" Margin="0,15,10,0" Click="btnExportToExcel_Click"/>
+            <Button x:Name="btnSaveChanges" Content="Сохранить изменения" Width="160" Height="35" Background="#3498DB" Foreground="White" FontWeight="Bold" Margin="0,15,10,0" Click="btnSaveChanges_Click"/>
+            <Button x:Name="btnDeleteStorage" Content="Удалить" Width="100" Height="35" Background="#EF4444" Foreground="White" FontWeight="Bold" Margin="0,15,0,0" Click="btnDeleteStorage_Click"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Название склада" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtNewName" Width="200" Height="35" VerticalContentAlignment="Center" Padding="5,0"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,15,0">
+                    <TextBlock Text="Вместимость (т)" FontSize="11" Foreground="#64748B" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtNewCapacity" Width="150" Height="35" VerticalContentAlignment="Center" Padding="5,0"/>
+                </StackPanel>
+                <Button x:Name="btnAddStorage" Content="Добавить" Width="100" Height="35" Background="#E67E22" Foreground="White" FontWeight="Bold" Margin="0,15,0,0" Click="btnAddStorage_Click"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" x:Name="dgStorages" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Вместимость (т)" Binding="{Binding Capacity}" Width="150"/>
+                <DataGridTextColumn Header="Текущая загрузка (т)" Binding="{Binding CurrentLoad}" Width="150" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>
