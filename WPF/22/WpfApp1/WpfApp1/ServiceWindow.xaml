@@ -1,0 +1,21 @@
+﻿<Window x:Class="WpfApp1.ServiceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Услуга" Height="250" Width="400" WindowStartupLocation="CenterOwner" Background="#1E1E1E">
+    <StackPanel Margin="20">
+        <TextBlock Text="Наименование (ОБЯЗАТЕЛЬНО):" Foreground="White" Margin="0,10,0,5"/>
+        <TextBox Name="TxtServiceName" Height="30" Background="#3E3E42" Foreground="White" BorderThickness="0" Padding="5"/>
+
+        <TextBlock Text="Базовая цена (ОБЯЗАТЕЛЬНО, ТОЛЬКО ЦИФРЫ):" Foreground="White" Margin="0,10,0,5"/>
+        <TextBox Name="TxtBasePrice" Height="30" Background="#3E3E42" Foreground="White" BorderThickness="0" Padding="5"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,30,0,0">
+            <Button Name="BtnSave" Content="Сохранить" Width="100" Height="35" Background="#2E7D32" Foreground="White" BorderThickness="0" Margin="0,0,10,0" Click="BtnSave_Click"/>
+            <Button Name="BtnCancel" Content="Отмена" Width="100" Height="35" Background="#C62828" Foreground="White" BorderThickness="0" Click="BtnCancel_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

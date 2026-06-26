@@ -1,0 +1,32 @@
+<Window x:Class="ElanCheeseApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ElanCheeseApp"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        Title="Сыродельный комбинат" Height="760" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundColor}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#FDE047" BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
+            <StackPanel Margin="16,24,16,0">
+                <TextBlock Text="🧀 Еланский Сыр" FontSize="24" FontWeight="Bold" Foreground="#1F2937" Margin="12,0,0,40" TextWrapping="Wrap"/>
+
+                <RadioButton Content="📊 Отчеты" Click="OnReportsClick" Style="{StaticResource SidebarRadioButtonStyle}" IsChecked="True"/>
+                <RadioButton Content="🧀 Партии сыра" Click="OnCheeseBatchesClick" Style="{StaticResource SidebarRadioButtonStyle}"/>
+                <RadioButton Content="🍪 Сорта сыра" Click="OnCheeseVarietiesClick" Style="{StaticResource SidebarRadioButtonStyle}"/>
+                <RadioButton Content="❄️ Камеры хранения" Click="OnStorageChambersClick" Style="{StaticResource SidebarRadioButtonStyle}"/>
+                <RadioButton Content="👥 Сотрудники" Click="OnEmployeesClick" Style="{StaticResource SidebarRadioButtonStyle}"/>
+                <RadioButton Content="✅ Контроль качества" Click="OnQualityInspectionsClick" Style="{StaticResource SidebarRadioButtonStyle}"/>
+            </StackPanel>
+        </Border>
+
+        <Frame Grid.Column="1" Name="MainFrame" NavigationUIVisibility="Hidden" Margin="16"/>
+    </Grid>
+</Window>

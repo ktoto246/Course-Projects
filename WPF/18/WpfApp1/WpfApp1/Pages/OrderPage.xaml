@@ -1,0 +1,56 @@
+<Page x:Class="WpfApp1.Pages.OrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="clr-namespace:WpfApp1.Pages"
+      mc:Ignorable="d"
+      Background="#FFF8DC"
+      Title="Заказы">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Поиск (по клиенту или мельнице):" FontSize="14" FontWeight="Bold" Foreground="#8B4513" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtSearch" Width="250" TextChanged="OnSearchTextChanged" Padding="5"/>
+        </StackPanel>
+
+        <DataGrid x:Name="dataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" SelectionChanged="OnDataGridSelectionChanged" Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№ Заказа" Binding="{Binding OrderId}" Width="80"/>
+                <DataGridTextColumn Header="Дата отгрузки" Binding="{Binding OrderDate, StringFormat=\{0:dd.MM.yyyy HH:mm\}}" Width="150"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Client.ClientName}" Width="*"/>
+                <DataGridTextColumn Header="Мельница" Binding="{Binding Mill.MillName}" Width="200"/>
+                <DataGridTextColumn Header="Сумма (руб)" Binding="{Binding TotalSum, StringFormat=\{0:N2\}}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <WrapPanel Grid.Row="2" Margin="0,10">
+            <StackPanel Orientation="Horizontal" Margin="0,5,15,5">
+                <TextBlock Text="Клиент:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbClient" Width="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,15,5">
+                <TextBlock Text="Мельница:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbMill" Width="150"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,15,5">
+                <TextBlock Text="Дата заказа:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                <DatePicker x:Name="dpOrderDate" Width="120"/>
+            </StackPanel>
+        </WrapPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Добавить" Width="100" Height="30" Margin="10,0,0,0" Click="OnAddClick" Background="#F5DEB3" Foreground="#8B4513"/>
+            <Button Content="Изменить" Width="100" Height="30" Margin="10,0,0,0" Click="OnEditClick" Background="#F5DEB3" Foreground="#8B4513"/>
+            <Button Content="Удалить" Width="100" Height="30" Margin="10,0,0,0" Click="OnDeleteClick" Background="#FFDAB9" Foreground="#8B4513"/>
+            <Button Content="Очистить" Width="100" Height="30" Margin="10,0,0,0" Click="OnClearClick" Background="#EEE8AA" Foreground="#8B4513"/>
+        </StackPanel>
+    </Grid>
+</Page>

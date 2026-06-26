@@ -1,250 +1,262 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace WpfApp1.Models
 {
-    [Table("Сотрудники")]
+    public class Category
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; } = null!;
+
+        public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();
+    }
+
+    public class Status
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; } = null!;
+
+        public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();
+    }
+
+    public class Position
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; } = null!;
+
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    }
+
+    public class Department
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; } = null!;
+
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    }
+
+    public class Cabinet
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Number { get; set; } = null!;
+
+        public int? ResponsibleEmployeeId { get; set; }
+        [ForeignKey("ResponsibleEmployeeId")]
+        public Employee? ResponsibleEmployee { get; set; }
+
+        public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();
+    }
+
     public class Employee
     {
         [Key]
-        [Column("ID_Сотрудника")]
         public int Id { get; set; }
 
         [Required]
-        [Column("ФИО")]
+        [MaxLength(150)]
         public string FullName { get; set; } = null!;
 
-        [Required]
-        [Column("Логин")]
-        public string Login { get; set; } = null!;
+        public int? PositionId { get; set; }
+        [ForeignKey("PositionId")]
+        public Position? Position { get; set; }
 
-        [Required]
-        [Column("Пароль")]
-        public string Password { get; set; } = null!;
+        public int? DepartmentId { get; set; }
+        [ForeignKey("DepartmentId")]
+        public Department? Department { get; set; }
 
-        [Required]
-        [Column("Роль")]
-        public string Role { get; set; } = null!;
-
-        [Column("Статус_Активности")]
-        public bool IsActive { get; set; } = true;
-
-        public ICollection<GrainBatch> WeighedBatches { get; set; } = new List<GrainBatch>();
-        public ICollection<LabTest> LabTests { get; set; } = new List<LabTest>();
-        public ICollection<RenderedService> ProcessedServices { get; set; } = new List<RenderedService>();
+        public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();
     }
 
-    [Table("Клиенты")]
-    public class Client
+    [Index(nameof(InventoryNumber), IsUnique = true)]
+    public class Equipment
     {
         [Key]
-        [Column("ID_Клиента")]
         public int Id { get; set; }
 
         [Required]
-        [Column("Название_Организации")]
-        public string CompanyName { get; set; } = null!;
+        [MaxLength(50)]
+        public string InventoryNumber { get; set; } = null!;
 
         [Required]
-        [Column("ИНН")]
-        public string INN { get; set; } = null!;
-
-        [Column("Адрес")]
-        public string? Address { get; set; }
-
-        [Column("Контактный_Телефон")]
-        public string? Phone { get; set; }
-
-        public ICollection<GrainBatch> Batches { get; set; } = new List<GrainBatch>();
-    }
-
-    [Table("Справочник_Культур")]
-    public class Crop
-    {
-        [Key]
-        [Column("ID_Культуры")]
-        public int Id { get; set; }
-
-        [Required]
-        [Column("Название_Культуры")]
+        [MaxLength(200)]
         public string Name { get; set; } = null!;
 
-        [Column("Базовая_Влажность_Процент")]
-        public decimal BaseMoisture { get; set; }
+        [MaxLength(100)]
+        public string? SerialNumber { get; set; }
 
-        [Column("Базовая_Сорность_Процент")]
-        public decimal BaseWeediness { get; set; }
+        public DateTime? PurchaseDate { get; set; }
 
-        public ICollection<GrainBatch> Batches { get; set; } = new List<GrainBatch>();
+        public decimal? Price { get; set; }
+
+        public int? CabinetId { get; set; }
+        [ForeignKey("CabinetId")]
+        public Cabinet? Cabinet { get; set; }
+
+        [MaxLength(500)]
+        public string? Notes { get; set; }
+
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+        public Category Category { get; set; } = null!;
+
+        public int StatusId { get; set; }
+        [ForeignKey("StatusId")]
+        public Status Status { get; set; } = null!;
+
+        public int? EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
+        public Employee? Employee { get; set; }
+
+        public ICollection<RepairHistory> RepairHistories { get; set; } = new List<RepairHistory>();
+
+        [NotMapped]
+        public decimal CurrentAmortizedValue
+        {
+            get
+            {
+                if (!Price.HasValue || !PurchaseDate.HasValue) return Price ?? 0m;
+                if (PurchaseDate.Value > DateTime.Today) return Price.Value;
+
+                int usefulLife = ServiceLifeYears ?? 5;
+                if (usefulLife <= 0) return 0m;
+
+                decimal yearsElapsed = (decimal)(DateTime.Today - PurchaseDate.Value).TotalDays / 365.25m;
+                decimal ratio = Math.Min(yearsElapsed / usefulLife, 1.0m);
+                decimal depreciated = Price.Value * ratio;
+
+                return Math.Max(Price.Value - depreciated, 0m);
+            }
+        }
+
+        [NotMapped]
+        public decimal TotalRepairCost => RepairHistories != null ? RepairHistories.Sum(r => r.Cost ?? 0) : 0;
+
+        public DateTime? WarrantyExpireDate { get; set; }
+        public int? ServiceLifeYears { get; set; }
+        [MaxLength(200)]
+        public string? Supplier { get; set; }
     }
 
-    [Table("Склады")]
-    public class Storage
+    public class MovementHistory
     {
         [Key]
-        [Column("ID_Склада")]
+        public int Id { get; set; }
+
+        public int EquipmentId { get; set; }
+        [ForeignKey("EquipmentId")]
+        public Equipment Equipment { get; set; } = null!;
+
+        public int? FromEmployeeId { get; set; }
+        [ForeignKey("FromEmployeeId")]
+        public Employee? FromEmployee { get; set; }
+
+        public int? ToEmployeeId { get; set; }
+        [ForeignKey("ToEmployeeId")]
+        public Employee? ToEmployee { get; set; }
+
+        public DateTime TransferDate { get; set; }
+
+        [MaxLength(250)]
+        public string? Reason { get; set; }
+    }
+
+    public class RepairHistory
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public int EquipmentId { get; set; }
+        [ForeignKey("EquipmentId")]
+        public Equipment Equipment { get; set; } = null!;
+
+        public DateTime DateIn { get; set; }
+
+        public DateTime? DateOut { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        public string IssueDescription { get; set; } = null!;
+
+        public decimal? Cost { get; set; }
+
+        [MaxLength(200)]
+        public string? Contractor { get; set; }
+
+        public bool IsWarrantyRepair { get; set; }
+    }
+
+    [Index(nameof(Login), IsUnique = true)]
+    public class User
+    {
+        [Key]
         public int Id { get; set; }
 
         [Required]
-        [Column("Наименование_Склада")]
-        public string Name { get; set; } = null!;
-
-        [Column("Вместимость_Тонн")]
-        public decimal Capacity { get; set; }
-
-        [Column("Текущая_Загрузка_Тонн")]
-        public decimal CurrentLoad { get; set; } = 0;
-
-        public ICollection<GrainBatch> Batches { get; set; } = new List<GrainBatch>();
-    }
-
-    [Table("Услуги")]
-    public class Service
-    {
-        [Key]
-        [Column("ID_Услуги")]
-        public int Id { get; set; }
+        [MaxLength(50)]
+        public string Login { get; set; }
 
         [Required]
-        [Column("Название_Услуги")]
-        public string Name { get; set; } = null!;
+        [MaxLength(50)]
+        public string Password { get; set; }
 
         [Required]
-        [Column("Единица_Измерения")]
-        public string Unit { get; set; } = null!;
-
-        [Column("Цена_За_Единицу")]
-        public decimal UnitPrice { get; set; }
-
-        public ICollection<RenderedService> RenderedServices { get; set; } = new List<RenderedService>();
+        [MaxLength(20)]
+        public string Role { get; set; }
     }
 
-    [Table("Партии_Зерна")]
-    public class GrainBatch
+    public static class AppSession
     {
-        [Key]
-        [Column("ID_Партии")]
-        public int Id { get; set; }
+        private static string _currentRole;
+        private static bool _isLocked = false;
 
-        [Column("ID_Клиента")]
-        public int ClientId { get; set; }
+        private static readonly HashSet<string> ValidRoles = new() { "Admin", "Operator", "Viewer" };
 
-        [Column("ID_Весовщика")]
-        public int WeigherId { get; set; }
+        public static string CurrentRole => _currentRole;
 
-        [Column("ID_Культуры")]
-        public int CropId { get; set; }
+        public static void SetRole(string role)
+        {
+            if (_isLocked) throw new InvalidOperationException("������ ��� ����������������.");
+            if (!ValidRoles.Contains(role)) throw new ArgumentException($"������ ��������. ����������� ����: {role}");
 
-        [Column("ID_Склада")]
-        public int? StorageId { get; set; }
+            _currentRole = role;
+            _isLocked = true;
+        }
 
-        [Required]
-        [Column("Номер_Авто")]
-        public string CarNumber { get; set; } = null!;
-
-        [Column("Вес_Брутто")]
-        public decimal GrossWeight { get; set; }
-
-        [Column("Вес_Тара")]
-        public decimal TareWeight { get; set; }
-
-        // Это поле вычисляемое в БД, в C# мы его только читаем
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Column("Вес_Нетто")]
-        public decimal NetWeight { get; private set; }
-
-        [Column("Дата_Прибытия")]
-        public DateTime ArrivalDate { get; set; } = DateTime.Now;
-
-        [Column("Статус")]
-        public string Status { get; set; } = "Ожидает анализа";
-
-        // Навигация
-        [ForeignKey("ClientId")]
-        public Client Client { get; set; } = null!;
-
-        [ForeignKey("WeigherId")]
-        public Employee Weigher { get; set; } = null!;
-
-        [ForeignKey("CropId")]
-        public Crop Crop { get; set; } = null!;
-
-        [ForeignKey("StorageId")]
-        public Storage? Storage { get; set; }
-
-        public LabTest? LabTest { get; set; }
-        public ICollection<RenderedService> RenderedServices { get; set; } = new List<RenderedService>();
+        public static void Clear()
+        {
+            _currentRole = null;
+            _isLocked = false;
+        }
     }
 
-    [Table("Лабораторные_Анализы")]
-    public class LabTest
+    public static class SystemStatuses
     {
-        [Key]
-        [Column("ID_Анализа")]
-        public int Id { get; set; }
-
-        [Column("ID_Партии")]
-        public int BatchId { get; set; }
-
-        [Column("ID_Лаборанта")]
-        public int LabTechId { get; set; }
-
-        [Column("Влажность_Факт")]
-        public decimal Moisture { get; set; }
-
-        [Column("Сорность_Факт")]
-        public decimal Weediness { get; set; }
-
-        [Column("Результат_Органолептики")]
-        public string? Organoleptics { get; set; }
-
-        [Column("Дата_Анализа")]
-        public DateTime TestDate { get; set; } = DateTime.Now;
-
-        [ForeignKey("BatchId")]
-        public GrainBatch Batch { get; set; } = null!;
-
-        [ForeignKey("LabTechId")]
-        public Employee LabTech { get; set; } = null!;
-    }
-
-    [Table("Оказанные_Услуги")]
-    public class RenderedService
-    {
-        [Key]
-        [Column("ID_Записи")]
-        public int Id { get; set; }
-
-        [Column("ID_Партии")]
-        public int BatchId { get; set; }
-
-        [Column("ID_Услуги")]
-        public int ServiceId { get; set; }
-
-        [Column("ID_Менеджера")]
-        public int ManagerId { get; set; }
-
-        [Column("Количество")]
-        public decimal Quantity { get; set; }
-
-        [Column("Итоговая_Стоимость")]
-        public decimal TotalPrice { get; set; }
-
-        [Column("Дата_Оформления")]
-        public DateTime RecordDate { get; set; } = DateTime.Now;
-
-        [ForeignKey("BatchId")]
-        public GrainBatch Batch { get; set; } = null!;
-
-        [ForeignKey("ServiceId")]
-        public Service Service { get; set; } = null!;
-
-        [ForeignKey("ManagerId")]
-        public Employee Manager { get; set; } = null!;
+        public const string InUse = "� ������������";
+        public const string OnStock = "�� ������";
+        public const string InRepair = "� �������";
+        public const string Scrapped = "�������";
     }
 }

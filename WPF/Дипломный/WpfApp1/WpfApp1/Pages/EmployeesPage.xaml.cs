@@ -1,249 +1,212 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using WpfApp1.Data;
+using System.Windows.Data;
 using WpfApp1.Models;
-using WpfApp1.Helpers;
-using OfficeOpenXml;
+using ClosedXML.Excel;
 using Microsoft.Win32;
-using System.IO;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace WpfApp1.Pages
 {
     public partial class EmployeesPage : Page
     {
-        private AppDbContext _db;
+        private AppDbContext _context;
+        private ICollectionView _employeesView;
 
         public EmployeesPage()
         {
             InitializeComponent();
-            _db = new AppDbContext();
-            LoadEmployees();
+            if (AppSession.CurrentRole == "Viewer" || AppSession.CurrentRole == "Operator")
+            {
+                AddPanel.Visibility = Visibility.Collapsed;
+                BtnDelete.Visibility = Visibility.Collapsed;
+                BtnSave.Visibility = Visibility.Collapsed;
+                EmployeesGrid.IsReadOnly = true;
+            }
+            try
+            {
+                _context = new AppDbContext();
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка БД: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            this.Unloaded += (s, e) => _context?.Dispose();
         }
 
-        private void LoadEmployees()
+        private void LoadData()
         {
-            dgEmployees.ItemsSource = _db.Employees.ToList();
+            var positions = _context.Positions.ToList();
+            var departments = _context.Departments.ToList();
+
+            cmbPosition.ItemsSource = positions;
+            cmbDepartment.ItemsSource = departments;
+
+            colPosition.ItemsSource = positions;
+            colDepartment.ItemsSource = departments;
+
+            _context.Employees
+                .Include(e => e.Position)
+                .Include(e => e.Department)
+                .Load();
+
+            _employeesView = CollectionViewSource.GetDefaultView(_context.Employees.Local.ToObservableCollection());
+            _employeesView.Filter = FilterEmployees;
+            EmployeesGrid.ItemsSource = _employeesView;
         }
 
-        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        private bool FilterEmployees(object item)
         {
-            string searchText = txtSearch.Text.Trim().ToLower();
-            dgEmployees.ItemsSource = _db.Employees
-                .Where(emp => emp.FullName.ToLower().Contains(searchText) || emp.Login.ToLower().Contains(searchText))
-                .ToList();
+            if (string.IsNullOrWhiteSpace(txtSearch.Text))
+                return true;
+
+            if (item is Employee e)
+            {
+                string search = txtSearch.Text.ToLower();
+                return e.FullName.ToLower().Contains(search) ||
+                       (e.Position != null && e.Position.Name.ToLower().Contains(search)) ||
+                       (e.Department != null && e.Department.Name.ToLower().Contains(search));
+            }
+            return false;
         }
 
-        private void btnAddEmployee_Click(object sender, RoutedEventArgs e)
+        private void Filter_Changed(object sender, RoutedEventArgs e)
         {
-            string fullName = txtFullName.Text?.Trim();
-            string login = txtLogin.Text?.Trim();
-            string password = txtPassword.Text?.Trim();
-            string role = (cmbRole.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            _employeesView?.Refresh();
+        }
 
-            if (string.IsNullOrWhiteSpace(fullName) || fullName.Length < 3)
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
             {
-                MessageBox.Show("ФИО должно содержать минимум 3 символа.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(login) || login.Length < 3)
-            {
-                MessageBox.Show("Логин должен содержать минимум 3 символа.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (_db.Employees.Any(emp => emp.Login == login))
-            {
-                MessageBox.Show("Сотрудник с таким логином уже существует.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(password) || password.Length < 5)
-            {
-                MessageBox.Show("Пароль должен содержать минимум 5 символов.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(role))
-            {
-                MessageBox.Show("Выберите роль сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("ФИО сотрудника обязательно для заполнения.", "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             var newEmployee = new Employee
             {
-                FullName = fullName,
-                Login = login,
-                Password = password,
-                Role = role,
-                IsActive = true
+                FullName = txtFullName.Text.Trim(),
+                PositionId = cmbPosition.SelectedValue != null ? (int?)cmbPosition.SelectedValue : null,
+                DepartmentId = cmbDepartment.SelectedValue != null ? (int?)cmbDepartment.SelectedValue : null
             };
 
-            _db.Employees.Add(newEmployee);
-            _db.SaveChanges();
+            try
+            {
+                _context.Employees.Add(newEmployee);
+                _context.SaveChanges();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Ошибка при добавлении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             txtFullName.Clear();
-            txtLogin.Clear();
-            txtPassword.Clear();
-            cmbRole.SelectedIndex = -1;
-            txtSearch.Clear();
+            cmbPosition.SelectedItem = null;
+            cmbDepartment.SelectedItem = null;
 
-            LoadEmployees();
+            EmployeesGrid.Items.Refresh();
         }
 
-        private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            dgEmployees.CommitEdit(DataGridEditingUnit.Row, true);
-
-            var modifiedEntries = _db.ChangeTracker.Entries<Employee>()
-                .Where(x => x.State == EntityState.Modified)
-                .ToList();
-
-            var validRoles = new[] { "Администратор", "Весовщик", "Лаборант", "Менеджер" };
-
-            foreach (var entry in modifiedEntries)
+            if (EmployeesGrid.SelectedItem is Employee selectedEmployee)
             {
-                var emp = entry.Entity;
+                int equipmentCount = _context.Equipments.Count(eq => eq.EmployeeId == selectedEmployee.Id);
 
-                if (string.IsNullOrWhiteSpace(emp.FullName) || emp.FullName.Length < 3)
+                bool hasHistory = _context.MovementHistories.Any(m =>
+                    m.FromEmployeeId == selectedEmployee.Id || m.ToEmployeeId == selectedEmployee.Id);
+
+                if (equipmentCount > 0)
                 {
-                    MessageBox.Show($"ФИО сотрудника (ID: {emp.Id}) слишком короткое. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
+                    MessageBox.Show($"За сотрудником числится {equipmentCount} ед. техники. Сначала переведите её на другого сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(emp.Login) || emp.Login.Length < 3)
+                if (hasHistory)
                 {
-                    MessageBox.Show($"Логин сотрудника (ID: {emp.Id}) слишком короткий. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
+                    MessageBox.Show("Данный сотрудник участвовал в перемещениях оборудования и числится в истории. Его нельзя удалить для сохранения целостности архива.", "Логическая ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                if (string.IsNullOrWhiteSpace(emp.Password) || emp.Password.Length < 5)
+                if (MessageBox.Show($"Удалить '{selectedEmployee.FullName}'?", "Вопрос", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show($"Пароль сотрудника (ID: {emp.Id}) слишком короткий. Минимум 5 символов. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
-                    return;
-                }
-
-                if (_db.Employees.Any(existing => existing.Login == emp.Login && existing.Id != emp.Id))
-                {
-                    MessageBox.Show($"Логин '{emp.Login}' уже занят. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
-                    return;
-                }
-
-                if (!validRoles.Contains(emp.Role))
-                {
-                    MessageBox.Show($"Недопустимая роль '{emp.Role}' у сотрудника (ID: {emp.Id}). Разрешены только: Администратор, Весовщик, Лаборант, Менеджер. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
-                    return;
-                }
-
-                if (emp.Id == CurrentSession.CurrentUser.Id && !emp.IsActive)
-                {
-                    MessageBox.Show("Нельзя заблокировать собственный аккаунт. Изменения отменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _db.ChangeTracker.Clear();
-                    LoadEmployees();
-                    return;
-                }
-            }
-
-            _db.SaveChanges();
-            _db.ChangeTracker.Clear();
-            MessageBox.Show("Изменения успешно сохранены.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-            LoadEmployees();
-        }
-
-        private void btnDeleteEmployee_Click(object sender, RoutedEventArgs e)
-        {
-            if (dgEmployees.SelectedItem is Employee selectedEmployee)
-            {
-                if (selectedEmployee.Id == CurrentSession.CurrentUser.Id)
-                {
-                    MessageBox.Show("Нельзя удалить собственную учетную запись.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (selectedEmployee.Role == "Администратор")
-                {
-                    int adminCount = _db.Employees.Count(emp => emp.Role == "Администратор" && emp.IsActive);
-                    if (adminCount <= 1)
+                    try
                     {
-                        MessageBox.Show("Нельзя удалить единственного активного Администратора.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
+                        _context.Employees.Remove(selectedEmployee);
+                        _context.SaveChanges();
+                        MessageBox.Show("Сотрудник успешно удалён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadData();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при удалении сотрудника:\n{ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-
-                int weighCount = _db.GrainBatches.Count(b => b.WeigherId == selectedEmployee.Id);
-                int labCount = _db.LabTests.Count(t => t.LabTechId == selectedEmployee.Id);
-                int serviceCount = _db.RenderedServices.Count(s => s.ManagerId == selectedEmployee.Id);
-
-                if (weighCount > 0 || labCount > 0 || serviceCount > 0)
-                {
-                    StringBuilder sb = new StringBuilder("Нельзя удалить сотрудника. Найдены связанные записи:\n");
-                    if (weighCount > 0) sb.AppendLine($"- Партии зерна (весовщик): {weighCount}");
-                    if (labCount > 0) sb.AppendLine($"- Лабораторные анализы: {labCount}");
-                    if (serviceCount > 0) sb.AppendLine($"- Оказанные услуги: {serviceCount}");
-                    MessageBox.Show(sb.ToString(), "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (MessageBox.Show($"Удалить сотрудника '{selectedEmployee.FullName}'?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    _db.Employees.Remove(selectedEmployee);
-                    _db.SaveChanges();
-                    txtSearch.Clear();
-                    LoadEmployees();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Выберите сотрудника в таблице для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        private void btnExportToExcel_Click(object sender, RoutedEventArgs e)
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Workbook|*.xlsx" };
-            if (sfd.ShowDialog() == true)
+            try
             {
-                using (var package = new ExcelPackage())
+                _context.SaveChanges();
+                MessageBox.Show("Изменения успешно сохранены.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var saveFileDialog = new SaveFileDialog
                 {
-                    var worksheet = package.Workbook.Worksheets.Add("Сотрудники");
+                    Filter = "Excel Files|*.xlsx",
+                    Title = "Сохранить отчет",
+                    FileName = $"Сотрудники_{DateTime.Now:yyyyMMdd}.xlsx"
+                };
 
-                    worksheet.Cells[1, 1].Value = "ID";
-                    worksheet.Cells[1, 2].Value = "ФИО";
-                    worksheet.Cells[1, 3].Value = "Логин";
-                    worksheet.Cells[1, 4].Value = "Роль";
-                    worksheet.Cells[1, 5].Value = "Активен";
-
-                    var employees = _db.Employees.ToList();
-                    for (int i = 0; i < employees.Count; i++)
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    using (var workbook = new XLWorkbook())
                     {
-                        var emp = employees[i];
-                        worksheet.Cells[i + 2, 1].Value = emp.Id;
-                        worksheet.Cells[i + 2, 2].Value = emp.FullName;
-                        worksheet.Cells[i + 2, 3].Value = emp.Login;
-                        worksheet.Cells[i + 2, 4].Value = emp.Role;
-                        worksheet.Cells[i + 2, 5].Value = emp.IsActive ? "Да" : "Нет";
-                    }
+                        var worksheet = workbook.Worksheets.Add("Сотрудники");
 
-                    File.WriteAllBytes(sfd.FileName, package.GetAsByteArray());
-                    MessageBox.Show("Данные выгружены в Excel", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        worksheet.Cell(1, 1).Value = "Код";
+                        worksheet.Cell(1, 2).Value = "ФИО";
+                        worksheet.Cell(1, 3).Value = "Должность";
+                        worksheet.Cell(1, 4).Value = "Отдел";
+
+                        var headerRow = worksheet.Row(1);
+                        headerRow.Style.Font.Bold = true;
+                        headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+                        int row = 2;
+                        foreach (Employee emp in _employeesView)
+                        {
+                            worksheet.Cell(row, 1).Value = emp.Id;
+                            worksheet.Cell(row, 2).Value = emp.FullName;
+                            worksheet.Cell(row, 3).Value = emp.Position?.Name;
+                            worksheet.Cell(row, 4).Value = emp.Department?.Name;
+                            row++;
+                        }
+
+                        worksheet.Columns().AdjustToContents();
+                        workbook.SaveAs(saveFileDialog.FileName);
+                    }
+                    MessageBox.Show("Отчет успешно сохранен в Excel!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при экспорте: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

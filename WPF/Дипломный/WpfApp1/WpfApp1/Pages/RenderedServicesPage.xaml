@@ -44,7 +44,7 @@
 
         <DataGrid Grid.Row="2" x:Name="dgRenderedServices" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True" Visibility="Collapsed"/>
                 <DataGridTextColumn Header="Авто" Binding="{Binding Batch.CarNumber}" Width="120" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Услуга" Binding="{Binding Service.Name}" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>

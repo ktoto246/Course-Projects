@@ -39,6 +39,15 @@ namespace WpfApp1.Pages
                 .Include(rs => rs.Batch)
                 .Include(rs => rs.Service)
                 .ToList();
+
+            if (CurrentSession.CurrentUser.Role == "Администратор")
+            {
+                dgRenderedServices.IsReadOnly = true;
+
+                btnDeleteService.Visibility = Visibility.Collapsed;
+                btnAddService.Visibility = Visibility.Collapsed;
+                btnSaveChanges.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
@@ -66,6 +75,22 @@ namespace WpfApp1.Pages
         private void cmbService_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedService = cmbService.SelectedItem as Service;
+
+            if (_selectedService != null && cmbBatch.SelectedValue != null)
+            {
+                if (_selectedService.Name.ToLower().Contains("хранен"))
+                {
+                    int batchId = (int)cmbBatch.SelectedValue;
+                    var batch = _db.GrainBatches.Find(batchId);
+                    if (batch != null)
+                    {
+                        int days = (int)(DateTime.Today - batch.ArrivalDate.Date).TotalDays;
+                        if (days <= 0) days = 1;
+                        txtQuantity.Text = days.ToString();
+                    }
+                }
+            }
+
             txtQuantity_TextChanged(null, null);
         }
 
@@ -106,7 +131,6 @@ namespace WpfApp1.Pages
             {
                 _db.RenderedServices.Add(newService);
 
-                // ФИКС #13: Замкнули бизнес-процесс. Партия уходит в "Завершено"!
                 var batchToUpdate = _db.GrainBatches.Find(selectedBatchId);
                 if (batchToUpdate != null)
                 {
@@ -178,22 +202,38 @@ namespace WpfApp1.Pages
         }
 
         private void btnDeleteService_Click(object sender, RoutedEventArgs e)
+{
+    if (dgRenderedServices.SelectedItem is RenderedService selectedService)
+    {
+        string serviceName = selectedService.Service?.Name ?? _db.Services.FirstOrDefault(s => s.Id == selectedService.ServiceId)?.Name ?? "Выбранную услугу";
+
+        if (MessageBox.Show($"Удалить услугу '{serviceName}'?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
         {
-            if (dgRenderedServices.SelectedItem is RenderedService selectedService)
+            int currentBatchId = selectedService.BatchId;
+
+            _db.RenderedServices.Remove(selectedService);
+            _db.SaveChanges();
+
+            bool hasOtherServices = _db.RenderedServices.Any(rs => rs.BatchId == currentBatchId);
+            if (!hasOtherServices)
             {
-                if (MessageBox.Show($"Удалить услугу '{selectedService.Service?.Name}'?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                var batchToRollback = _db.GrainBatches.Find(currentBatchId);
+                if (batchToRollback != null)
                 {
-                    _db.RenderedServices.Remove(selectedService);
+                    batchToRollback.Status = "Проведен анализ";
                     _db.SaveChanges();
-                    txtSearch.Clear();
-                    LoadData();
                 }
             }
-            else
-            {
-                MessageBox.Show("Выберите услугу.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+
+            txtSearch.Clear();
+            LoadData();
         }
+    }
+    else
+    {
+        MessageBox.Show("Выберите услугу.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+    }
+}
 
         private void btnExportToExcel_Click(object sender, RoutedEventArgs e)
         {

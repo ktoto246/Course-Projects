@@ -1,6 +1,4 @@
-﻿using System.Data.SqlTypes;
 using System.Windows;
-using WpfApp1.Helpers;
 using WpfApp1.Models;
 using WpfApp1.Pages;
 
@@ -12,86 +10,96 @@ namespace WpfApp1
         {
             InitializeComponent();
 
-            btnDashboard.Click += (s, e) => {
-                string r = CurrentSession.CurrentUser?.Role;
-                if (r == "Администратор") MainFrame.Navigate(new AdminDashboardPage());
-                else if (r == "Весовщик") MainFrame.Navigate(new WeigherDashboardPage());
-                else if (r == "Лаборант") MainFrame.Navigate(new LabDashboardPage());
-                else if (r == "Менеджер") MainFrame.Navigate(new ManagerDashboardPage());
-            };
+            if (AppSession.CurrentRole == "Viewer" || AppSession.CurrentRole == "Operator")
+            {
+                LblSpravochniki.Visibility = Visibility.Collapsed;
+                BtnOrgStructure.Visibility = Visibility.Collapsed;
+                BtnEmployees.Visibility = Visibility.Collapsed;
+                BtnCategories.Visibility = Visibility.Collapsed;
+                BtnStatuses.Visibility = Visibility.Collapsed;
+            }
 
-            btnEmployees.Click += (s, e) => MainFrame.Navigate(new EmployeesPage());
-            btnClients.Click += (s, e) => MainFrame.Navigate(new ClientsPage());
-            btnCrops.Click += (s, e) => MainFrame.Navigate(new CropsPage());
-            btnStorages.Click += (s, e) => MainFrame.Navigate(new StoragesPage());
-            btnServices.Click += (s, e) => MainFrame.Navigate(new ServicesPage());
-            btnBatches.Click += (s, e) => MainFrame.Navigate(new BatchesPage());
-            btnLabTests.Click += (s, e) => MainFrame.Navigate(new LabTestsPage());
-            btnRenderedServices.Click += (s, e) => MainFrame.Navigate(new RenderedServicesPage());
+            MainFrame.Navigate(new Pages.EquipmentsPage());
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void BtnEquipments_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentSession.CurrentUser != null)
-            {
-                txtUserName.Text = CurrentSession.CurrentUser.FullName;
-                txtUserRole.Text = CurrentSession.CurrentUser.Role;
-            }
-            ApplyRoleRestrictions();
+            MainFrame.Navigate(new Pages.EquipmentsPage());
         }
 
-        private void ApplyRoleRestrictions()
+        private void BtnMovementHistory_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentSession.CurrentUser == null)
-                return;
-
-            string role = CurrentSession.CurrentUser.Role;
-
-            if (role == "Весовщик")
-            {
-                btnEmployees.Visibility = Visibility.Collapsed;
-                btnStorages.Visibility = Visibility.Collapsed;
-                btnServices.Visibility = Visibility.Collapsed;
-                btnLabTests.Visibility = Visibility.Collapsed;
-                btnRenderedServices.Visibility = Visibility.Collapsed;
-                btnClients.Visibility = Visibility.Collapsed;
-                btnCrops.Visibility = Visibility.Collapsed;
-
-                MainFrame.Navigate(new WeigherDashboardPage());
-            }
-            else if (role == "Лаборант")
-            {
-                btnEmployees.Visibility = Visibility.Collapsed;
-                btnClients.Visibility = Visibility.Collapsed;
-                btnStorages.Visibility = Visibility.Collapsed;
-                btnServices.Visibility = Visibility.Collapsed;
-                btnRenderedServices.Visibility = Visibility.Collapsed;
-                btnCrops.Visibility = Visibility.Collapsed;
-
-                MainFrame.Navigate(new LabDashboardPage());
-            }
-            else if (role == "Менеджер")
-            {
-                btnEmployees.Visibility = Visibility.Collapsed;
-                btnLabTests.Visibility = Visibility.Collapsed;
-                btnCrops.Visibility = Visibility.Collapsed;
-                btnStorages.Visibility = Visibility.Collapsed;
-                btnBatches.Visibility = Visibility.Collapsed;
-
-                MainFrame.Navigate(new ManagerDashboardPage());
-            }
-            else if (role == "Администратор")
-            {
-                MainFrame.Navigate(new AdminDashboardPage());
-            }
+            MainFrame.Navigate(new Pages.MovementHistoryPage());
         }
 
-        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        private void BtnRepairHistory_Click(object sender, RoutedEventArgs e)
         {
-            CurrentSession.Logout();
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-            this.Close();
+            MainFrame.Navigate(new Pages.RepairHistoryPage());
+        }
+
+        private void BtnOrgStructure_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.DictionariesPage());
+        }
+
+        private void BtnEmployees_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.EmployeesPage());
+        }
+
+        private void BtnCategories_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.CategoriesPage());
+        }
+
+        private void BtnStatuses_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.StatusesPage());
+        }
+
+        private void BtnStatusChart_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.StatusAnalyticsPage());
+        }
+
+        private void BtnCategoryChart_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Pages.CategoryAnalyticsPage());
+        }
+
+        private void OpenFinancial_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new FinancialAnalyticsPage());
+        }
+
+        private void OpenDeadlines_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new DeadlinesAnalyticsPage());
+        }
+
+        private void OpenRepairCosts_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new RepairCostsAnalyticsPage());
+        }
+
+        private void OpenWorkload_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new WorkloadAnalyticsPage());
+        }
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("�� �������, ��� ������ ����� �� �������?",
+                                         "�������������", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                AppSession.Clear();
+
+                LoginWindow loginWindow = new LoginWindow();
+                loginWindow.Show();
+
+                this.Close();
+            }
         }
     }
 }

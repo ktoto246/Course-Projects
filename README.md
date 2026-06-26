@@ -7,7 +7,7 @@
 ### Требования
 - **Visual Studio** 2019+ или 2022
 - **.NET Framework** 4.7.2+ (для Windows Forms)
-- **.NET** 5.0+ (для WPF, если используется Modern .NET)
+- **.NET** 8.0+
 - **SQL Server** 2019+ или SQL Server Express
 
 ### Установка БД
@@ -66,7 +66,6 @@ Server=YOUR_SERVER_NAME;Database=YOUR_DATABASE_NAME;Integrated Security=true;
 ### WPF специфическое:
 - XAML для UI
 - Data Binding
-- MVVM паттерны (где применяется)
 
 ### Windows Forms специфическое:
 - Designer (VS Designer)
@@ -112,7 +111,6 @@ Server=YOUR_SERVER_NAME;Database=YOUR_DATABASE_NAME;Integrated Security=true;
 ## ⚠️ Важные замечания
 
 - Все приложения требуют **SQL Server** для работы
-- SQL скрипты находятся в папке `/SQL/` — выполните их перед запуском
 - Connection strings могут отличаться в зависимости от вашей конфигурации SQL Server
 - Проекты созданы в образовательных целях
 

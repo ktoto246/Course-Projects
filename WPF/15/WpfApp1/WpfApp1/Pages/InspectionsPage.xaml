@@ -1,0 +1,81 @@
+<Page x:Class="WpfApp1.Pages.InspectionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:WpfApp1.Pages"
+      xmlns:conv="clr-namespace:WpfApp1.Converters"
+      mc:Ignorable="d"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Контроль">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Форма ввода" Grid.Row="0" Margin="0,0,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Метод контроля:"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Name="InspectionMethodTextBox"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Сварное соединение:"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" Name="JointComboBox"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Результат:"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" Name="IsPassedCheckBox" Content="Принято"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Дата контроля:"/>
+                <DatePicker Grid.Row="3" Grid.Column="1" Name="InspectionDatePicker"/>
+
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+                    <Button Content="Сохранить" Width="100" Margin="0,0,10,0" Click="SaveButton_Click"/>
+                    <Button Content="Отмена" Width="100" Margin="0,0,10,0" Click="CancelButton_Click"/>
+                    <Button Content="Удалить" Width="100" Click="DeleteButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <DataGrid Grid.Row="1" Name="InspectionsDataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="InspectionsDataGrid_SelectionChanged" Background="#1E1E1E" 
+          RowBackground="#1E1E1E" 
+          AlternatingRowBackground="#2D2D30" 
+          Foreground="#FFFFFF" 
+          BorderBrush="#3F3F46" 
+          HorizontalGridLinesBrush="#3F3F46" 
+          VerticalGridLinesBrush="#3F3F46">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#2D2D30"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                    <Setter Property="Padding" Value="10,5"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="#3F3F46"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Resources>
+                <conv:BooleanToTextConverter x:Key="BooleanToTextConverter"/>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Соединение" Binding="{Binding Joint.JointNumber}" Width="*"/>
+                <DataGridTextColumn Header="Метод контроля" Binding="{Binding InspectionMethod}" Width="*"/>
+                <DataGridTextColumn Header="Результат" Binding="{Binding IsPassed, Converter={StaticResource BooleanToTextConverter}}" Width="*"/>
+                <DataGridTextColumn Header="Дата контроля" Binding="{Binding InspectionDate, StringFormat='dd.MM.yyyy'}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

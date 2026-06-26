@@ -1,0 +1,48 @@
+﻿<Page x:Class="WpfApp1.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DashboardPage">
+
+    <Page.Resources>
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="10" ShadowDepth="2" Opacity="0.2" Color="Black"/>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Оперативная сводка" FontSize="28" FontWeight="Bold" Foreground="#005A9E" Margin="0,0,0,20"/>
+        <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Width="250" Height="150" Margin="15" Effect="{StaticResource CardShadow}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Активных инцидентов" FontSize="16" Foreground="#666666" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="txtActiveIncidents" Text="0" FontSize="48" FontWeight="Bold" Foreground="#DC3545" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Width="250" Height="150" Margin="15" Effect="{StaticResource CardShadow}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Бригад на выезде" FontSize="16" Foreground="#666666" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="txtActiveBrigades" Text="0" FontSize="48" FontWeight="Bold" Foreground="#FFC107" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Width="250" Height="150" Margin="15" Effect="{StaticResource CardShadow}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Районов обслуживания" FontSize="16" Foreground="#666666" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="txtTotalDistricts" Text="0" FontSize="48" FontWeight="Bold" Foreground="#005A9E" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Width="250" Height="150" Margin="15" Effect="{StaticResource CardShadow}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Устранено за месяц" FontSize="16" Foreground="#666666" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="txtFixedIncidents" Text="0" FontSize="48" FontWeight="Bold" Foreground="#28A745" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </WrapPanel>
+    </Grid>
+</Page>

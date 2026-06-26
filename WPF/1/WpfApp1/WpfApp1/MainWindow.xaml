@@ -1,0 +1,71 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="БТМСХ | Панель управления" Height="720" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F2F5"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <Style TargetType="RadioButton" x:Key="MenuButtonStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#555555"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="15,0">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E5E5E5"/>
+                                <Setter Property="Foreground" Value="#111111"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#E3F2FD"/>
+                                <Setter Property="Foreground" Value="#0078D4"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="#D1D5DB" BorderThickness="0,0,1,0">
+            <StackPanel Margin="10,20,10,10">
+                <TextBlock Text="БТМСХ" Foreground="#333333" FontSize="28" FontWeight="Bold" Margin="15,0,0,5"/>
+                <TextBlock Text="Учебный процесс" Foreground="#777777" FontSize="13" Margin="15,0,0,30"/>
+
+                <RadioButton Content="Преподаватели" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="TeachersPage.xaml" Checked="MenuButton_Checked" IsChecked="True"/>
+                <RadioButton Content="Группы" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="GroupsPage.xaml" Checked="MenuButton_Checked"/>
+                <RadioButton Content="Студенты" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="StudentsPage.xaml" Checked="MenuButton_Checked"/>
+                <RadioButton Content="Дисциплины" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="SubjectsPage.xaml" Checked="MenuButton_Checked"/>
+                <RadioButton Content="Расписание" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="SchedulePage.xaml" Checked="MenuButton_Checked"/>
+                <RadioButton Content="Журнал" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="JournalPage.xaml" Checked="MenuButton_Checked"/>
+
+                <Separator Margin="10,15"/>
+                <RadioButton Content="Статистика" GroupName="Menu" Style="{StaticResource MenuButtonStyle}" Tag="StatsPage.xaml" Checked="MenuButton_Checked"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Margin="20" Background="#FFFFFF" CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.05" BlurRadius="10" ShadowDepth="1"/>
+            </Border.Effect>
+
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" ClipToBounds="True"/>
+        </Border>
+    </Grid>
+</Window>

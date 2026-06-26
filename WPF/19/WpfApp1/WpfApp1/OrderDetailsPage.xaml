@@ -1,0 +1,76 @@
+﻿<Page x:Class="WpfApp1.OrderDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="OrderDetailsPage" Background="#1E1E1E">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="0,0,15,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ComboBox x:Name="CmbFilterOrders" Grid.Column="0" Width="250" Height="35" Margin="0,0,10,0" 
+                          DisplayMemberPath="DisplayText" SelectedValuePath="OrderID"
+                          SelectionChanged="CmbFilterOrders_SelectionChanged"/>
+
+                <TextBox x:Name="TxtSearch" Grid.Column="1" Height="35" Margin="0,0,20,0" Padding="10,0" 
+                         VerticalContentAlignment="Center" FontSize="14" 
+                         TextChanged="TxtSearch_TextChanged"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button x:Name="BtnAdd" Content="Добавить" Width="120" Height="35" Margin="0,0,10,0" 
+                            Background="#68217A" Foreground="White" BorderThickness="0" Click="BtnAdd_Click"/>
+                    <Button x:Name="BtnEdit" Content="Изменить" Width="120" Height="35" Margin="0,0,10,0" 
+                            Background="#007ACC" Foreground="White" BorderThickness="0" Click="BtnEdit_Click"/>
+                    <Button x:Name="BtnDelete" Content="Удалить" Width="120" Height="35" 
+                            Background="#AC193D" Foreground="White" BorderThickness="0" Click="BtnDelete_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <DataGrid x:Name="OrderDetailsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" 
+                      CanUserSortColumns="True" SelectionMode="Single"
+                      Background="#2D2D30" Foreground="Black" RowBackground="White" AlternatingRowBackground="#E6E6E6"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding OrderDetailID}" Width="50"/>
+                    <DataGridTextColumn Header="№ Заказа" Binding="{Binding OrderID}" Width="80"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding Order.Client.CompanyName}" Width="*"/>
+                    <DataGridTextColumn Header="Товар" Binding="{Binding Product.ModelName}" Width="*"/>
+                    <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Border x:Name="EditPanel" Grid.Column="1" Width="300" Background="#252526" CornerRadius="8" Visibility="Collapsed" Padding="20">
+            <StackPanel>
+                <TextBlock x:Name="PanelTitle" Text="Состав заказа" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Заказ:" Foreground="#CCCCCC" Margin="0,0,0,5"/>
+                <ComboBox x:Name="CmbOrders" Height="30" Margin="0,0,0,15" SelectedValuePath="OrderID" DisplayMemberPath="DisplayText"/>
+
+                <TextBlock Text="Товар (Ёлка):" Foreground="#CCCCCC" Margin="0,0,0,5"/>
+                <ComboBox x:Name="CmbProducts" Height="30" Margin="0,0,0,15" SelectedValuePath="ProductID" DisplayMemberPath="ModelName"/>
+
+                <TextBlock Text="Количество штук:" Foreground="#CCCCCC" Margin="0,0,0,5"/>
+                <TextBox x:Name="TxtQuantity" Height="30" Margin="0,0,0,25" Padding="5"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="BtnSave" Content="Сохранить" Width="125" Height="35" Background="#68217A" Foreground="White" BorderThickness="0" Click="BtnSave_Click"/>
+                    <Button x:Name="BtnCancel" Content="Отмена" Width="125" Height="35" Background="#3E3E42" Foreground="White" BorderThickness="0" Click="BtnCancel_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

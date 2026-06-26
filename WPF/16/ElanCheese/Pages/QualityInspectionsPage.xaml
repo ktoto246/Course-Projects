@@ -1,0 +1,85 @@
+<Page x:Class="ElanCheeseApp.Pages.QualityInspectionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d" 
+      d:DesignHeight="680" d:DesignWidth="1000"
+      UseLayoutRounding="True"
+      SnapsToDevicePixels="True"
+      TextOptions.TextFormattingMode="Display"
+      Title="Контроль качества"
+      Background="{StaticResource BackgroundColor}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Контроль качества" Style="{StaticResource HeaderTextStyle}"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="420"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource CardStyle}">
+                <DataGrid x:Name="InspectionsDataGrid" 
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          SelectionChanged="OnInspectionsSelectionChanged"
+                          Margin="0,0,8,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID проверки" Binding="{Binding Id}" Width="80"/>
+                        <DataGridTextColumn Header="№ Партии" Binding="{Binding BatchId}" Width="80"/>
+                        <DataGridTextColumn Header="Сорт" Binding="{Binding Batch.Variety.Name}" Width="*"/>
+                        <DataGridTextColumn Header="Дата" Binding="{Binding InspectionDate, StringFormat='dd.MM.yyyy'}" Width="100"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="8,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Управление" Style="{StaticResource HeaderTextStyle}"/>
+
+                    <Label Content="Партия сыра:" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox x:Name="BatchComboBox" Margin="0,0,0,12" SelectedValuePath="Id">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                <Run Text="Партия №"/>
+                <Run Text="{Binding Id, Mode=OneWay}"/>
+                <Run Text=" — "/>
+                <Run Text="{Binding Variety.Name, Mode=OneWay}"/>
+                <Run Text=" (от "/>
+                <Run Text="{Binding ProductionDate, StringFormat='dd.MM.yyyy', Mode=OneWay}"/>
+                <Run Text=")"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Label Content="Дата проверки:" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker x:Name="InspectionDateDatePicker" Margin="0,0,0,12"/>
+
+                    <Label Content="Статус:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="StatusTextBox" Style="{StaticResource TextBoxStyle}" Margin="0,0,0,12"/>
+
+                    <Label Content="Заметки:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="NotesTextBox" Style="{StaticResource TextBoxStyle}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,12"/>
+
+                    <WrapPanel HorizontalAlignment="Right" Margin="0,16,0,0">
+                        <Button Content="Добавить" Style="{StaticResource ButtonStyle}" Click="OnAddClick" Margin="0,0,8,8"/>
+                        <Button Content="Сохранить" Style="{StaticResource ButtonStyle}" Click="OnSaveClick" Margin="0,0,8,8"/>
+                        <Button Content="Удалить" Style="{StaticResource DangerButtonStyle}" Click="OnDeleteClick" Margin="0,0,8,8"/>
+                        <Button Content="Очистить" Style="{StaticResource ClearButtonStyle}" Click="OnClearClick" Margin="0,0,0,8"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

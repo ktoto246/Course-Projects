@@ -1,0 +1,35 @@
+<Page x:Class="WpfApp1.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:lc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      mc:Ignorable="d"
+      Background="#FFF8DC"
+      Title="Графики">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" 
+                   Text="Объем отгруженной продукции по мельницам" 
+                   FontSize="20" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Foreground="#6B340B" 
+                   Margin="0,0,0,20"/>
+
+        <lc:CartesianChart x:Name="chart" Grid.Row="1" Margin="10">
+            <lc:CartesianChart.AxisX>
+                <lc:Axis x:Name="axisX" Title="Мельница" LabelsRotation="-15" Foreground="#8B4513"/>
+            </lc:CartesianChart.AxisX>
+
+            <lc:CartesianChart.AxisY>
+                <lc:Axis Title="Отгружено (тонны)" MinValue="0" Foreground="#8B4513"/>
+            </lc:CartesianChart.AxisY>
+        </lc:CartesianChart>
+    </Grid>
+</Page>

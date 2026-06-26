@@ -1,0 +1,70 @@
+﻿<Page x:Class="WpfApp1.SchedulePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Расписание" Background="#FFFFFF"
+      Loaded="Page_Loaded">
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="320" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="ScheduleGrid" Grid.Column="0" Margin="0,0,15,0"
+                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                  SelectionMode="Single" SelectionChanged="ScheduleGrid_SelectionChanged"
+                  Background="#FFFFFF" BorderBrush="#E0E0E0" RowHeight="35" HeadersVisibility="Column">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ScheduleId}" Width="40"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding ClassDate, StringFormat=dd.MM.yyyy}" Width="80"/>
+                <DataGridTextColumn Header="Пара" Binding="{Binding LessonNumber}" Width="50"/>
+                <DataGridTextColumn Header="Группа" Binding="{Binding Group.Name}" Width="80"/>
+                <DataGridTextColumn Header="Дисциплина" Binding="{Binding Subject.Name}" Width="*"/>
+                <DataGridTextColumn Header="Преподаватель" Binding="{Binding Teacher.LastName}" Width="100"/>
+                <DataGridTextColumn Header="Ауд." Binding="{Binding Room}" Width="50"/>
+                <DataGridTextColumn Header="Тип" Binding="{Binding ClassType}" Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Column="1" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="15">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Управление расписанием" FontSize="18" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Дата занятия *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <DatePicker x:Name="DpClassDate" Height="30" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Номер пары *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <TextBox x:Name="TxtLessonNumber" Height="30" Margin="0,0,0,10" Padding="5"/>
+
+                    <TextBlock Text="Группа *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <ComboBox x:Name="CmbGroup" Height="30" Margin="0,0,0,10" DisplayMemberPath="Name" SelectedValuePath="GroupId"/>
+
+                    <TextBlock Text="Дисциплина *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <ComboBox x:Name="CmbSubject" Height="30" Margin="0,0,0,10" DisplayMemberPath="Name" SelectedValuePath="SubjectId"/>
+
+                    <TextBlock Text="Преподаватель *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <ComboBox x:Name="CmbTeacher" Height="30" Margin="0,0,0,10" DisplayMemberPath="LastName" SelectedValuePath="TeacherId"/>
+
+                    <TextBlock Text="Аудитория *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <TextBox x:Name="TxtRoom" Height="30" Margin="0,0,0,10" Padding="5"/>
+
+                    <TextBlock Text="Тип занятия *" Foreground="#555555" Margin="0,0,0,2"/>
+                    <ComboBox x:Name="CmbClassType" Height="30" Margin="0,0,0,20">
+                        <ComboBoxItem Content="Лекция"/>
+                        <ComboBoxItem Content="Практика"/>
+                        <ComboBoxItem Content="Лабораторная"/>
+                        <ComboBoxItem Content="Экзамен"/>
+                    </ComboBox>
+
+                    <Button Content="Добавить" Height="35" Margin="0,0,0,10" Background="#10B981" Foreground="White" FontWeight="Bold" Click="BtnAdd_Click"/>
+                    <Button Content="Сохранить изменения" Height="35" Margin="0,0,0,10" Background="#3B82F6" Foreground="White" FontWeight="Bold" Click="BtnEdit_Click"/>
+                    <Button Content="Удалить" Height="35" Margin="0,0,0,15" Background="#EF4444" Foreground="White" FontWeight="Bold" Click="BtnDelete_Click"/>
+
+                    <Button Content="Очистить форму" Height="30" Background="#E5E7EB" Foreground="#374151" Click="BtnClear_Click"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>

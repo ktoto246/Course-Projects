@@ -1,0 +1,43 @@
+﻿<Page x:Class="WpfApp1.SubjectsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Дисциплины" Background="#FFFFFF"
+      Loaded="Page_Loaded">
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="SubjectsGrid" Grid.Column="0" Margin="0,0,15,0"
+                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                  SelectionMode="Single" SelectionChanged="SubjectsGrid_SelectionChanged"
+                  Background="#FFFFFF" BorderBrush="#E0E0E0" RowHeight="35" HeadersVisibility="Column">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding SubjectId}" Width="40"/>
+                <DataGridTextColumn Header="Название дисциплины" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Всего часов" Binding="{Binding TotalHours}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Column="1" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="15">
+            <StackPanel>
+                <TextBlock Text="Управление дисциплинами" FontSize="18" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Название *" Foreground="#555555" Margin="0,0,0,2"/>
+                <TextBox x:Name="TxtName" Height="30" Margin="0,0,0,10" Padding="5"/>
+
+                <TextBlock Text="Всего часов *" Foreground="#555555" Margin="0,0,0,2"/>
+                <TextBox x:Name="TxtHours" Height="30" Margin="0,0,0,20" Padding="5"/>
+
+                <Button Content="Добавить" Height="35" Margin="0,0,0,10" Background="#10B981" Foreground="White" FontWeight="Bold" Click="BtnAdd_Click"/>
+                <Button Content="Сохранить изменения" Height="35" Margin="0,0,0,10" Background="#3B82F6" Foreground="White" FontWeight="Bold" Click="BtnEdit_Click"/>
+                <Button Content="Удалить" Height="35" Margin="0,0,0,15" Background="#EF4444" Foreground="White" FontWeight="Bold" Click="BtnDelete_Click"/>
+
+                <Button Content="Очистить форму" Height="30" Background="#E5E7EB" Foreground="#374151" Click="BtnClear_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

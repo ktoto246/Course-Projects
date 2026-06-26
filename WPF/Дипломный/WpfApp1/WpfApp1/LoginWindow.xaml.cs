@@ -1,8 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
-using Microsoft.EntityFrameworkCore; // Обязательно для AsNoTracking
-using WpfApp1.Data;
-using WpfApp1.Helpers;
+using WpfApp1.Models;
 
 namespace WpfApp1
 {
@@ -13,43 +12,38 @@ namespace WpfApp1
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             string login = txtLogin.Text.Trim();
             string password = txtPassword.Password;
 
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Введите логин и пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            using (var db = new AppDbContext())
+            try
             {
-                // Фикс 1: Добавили AsNoTracking(), чтобы отвязать юзера от закрывающегося контекста БД
-                var user = db.Employees
-                    .AsNoTracking()
-                    .FirstOrDefault(u => u.Login == login && u.Password == password);
-
-                if (user != null)
+                using (var context = new AppDbContext())
                 {
-                    if (!user.IsActive)
+                    var user = context.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+
+                    if (user != null)
                     {
-                        MessageBox.Show("Этот аккаунт заблокирован. Обратитесь к администратору.", "Доступ закрыт", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
+                        AppSession.SetRole(user.Role);
+                        new MainWindow().Show();
+                        this.Close();
                     }
-
-                    // Фикс 2: Используем метод Login вместо прямого присваивания
-                    CurrentSession.Login(user);
-
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Close();
+                    else
+                    {
+                        MessageBox.Show("Неверный логин или пароль!", "Ошибка доступа", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Неверный логин или пароль!", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к базе данных:\n{ex.Message}", "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

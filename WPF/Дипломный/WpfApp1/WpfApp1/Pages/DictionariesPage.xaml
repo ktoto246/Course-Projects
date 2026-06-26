@@ -1,0 +1,120 @@
+﻿<Page x:Class="WpfApp1.Pages.DictionariesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Управление справочниками">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Управление справочниками системы" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <TabControl Grid.Row="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderLight}" BorderThickness="1">
+
+            <TabItem Header="Должности" Padding="10,5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Новая должность" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtPositionName" Width="250"/>
+                        </StackPanel>
+                        <Button Content="Добавить" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Click="BtnAddPosition_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="PositionsGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Код" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
+                            <DataGridTextColumn Header="Название должности" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Удалить" Style="{StaticResource DangerButton}" Padding="5,2" Click="BtnDeletePosition_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Отделы" Padding="10,5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Новый отдел" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtDepartmentName" Width="250"/>
+                        </StackPanel>
+                        <Button Content="Добавить" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Click="BtnAddDepartment_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="DepartmentsGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Код" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
+                            <DataGridTextColumn Header="Название отдела" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Удалить" Style="{StaticResource DangerButton}" Click="BtnDeleteDepartment_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Кабинеты / Локации" Padding="10,5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Margin="0,0,0,15">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Номер кабинета" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtCabinetNumber" Width="150"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Ответственный сотрудник" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="cmbCabinetEmployee" Width="200" DisplayMemberPath="FullName" SelectedValuePath="Id"/>
+                        </StackPanel>
+                        <Button Content="Добавить" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Click="BtnAddCabinet_Click"/>
+                    </WrapPanel>
+
+                    <DataGrid x:Name="CabinetsGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Код" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
+                            <DataGridTextColumn Header="Номер кабинета" Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                            <DataGridComboBoxColumn x:Name="colCabinetEmp" Header="Ответственное лицо (кто сидит)" SelectedValueBinding="{Binding ResponsibleEmployeeId, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="FullName" SelectedValuePath="Id" Width="*"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Удалить" Style="{StaticResource DangerButton}" Click="BtnDeleteCabinet_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Сохранить все изменения" Style="{StaticResource PrimaryButton}" Width="200" Click="BtnSaveAll_Click" Name="BtnSaveAll"/>
+        </StackPanel>
+    </Grid>
+</Page>
