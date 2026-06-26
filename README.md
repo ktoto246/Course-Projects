@@ -2,7 +2,7 @@
 
 Коллекция учебных, курсовых и дипломных проектов на **C#**, разработанных с использованием **WPF** и **Windows Forms**.
 
-Репозиторий включает как небольшие лабораторные работы для изучения отдельных технологий, так и полноценные информационные системы с клиент-серверной архитектурой, использованием **Entity Framework Core**, **ASP.NET Core Web API** и **Microsoft SQL Server**.
+Репозиторий включает как небольшие лабораторные работы для изучения отдельных технологий, так и полноценные информационные системы с клиент-серверной архитектурой, использованием **Entity Framework Core** и **Microsoft SQL Server**.
 
 ---
 
@@ -268,11 +268,11 @@ TrustServerCertificate=True;
 
 # 📌 Полезные ссылки
 
-* WPF Documentation
-* Windows Forms Documentation
-* Microsoft SQL Server
-* SQL Server Express
-* Visual Studio
+* [WPF Documentation](https://learn.microsoft.com/ru-ru/dotnet/desktop/wpf/)
+* [Windows Forms Documentation](https://learn.microsoft.com/ru-ru/dotnet/desktop/winforms/)
+* [Microsoft SQL Server](https://learn.microsoft.com/ru-ru/sql/sql-server/)
+* [SQL Server Express Download](https://www.microsoft.com/ru-ru/sql-server/sql-server-downloads)
+* [Visual Studio](https://visualstudio.microsoft.com/ru/)
 
 ---
 
