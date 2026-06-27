@@ -97,7 +97,7 @@
 ### Используемые технологии
 
 * C#
-* WPF / Windows Forms
+* WPF
 * Entity Framework Core
 * Microsoft SQL Server
 
